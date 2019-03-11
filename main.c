@@ -1,7 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
-#define size 20
-int front=-1, rear=-1, queue[size];
+
+struct cqueue{
+int data;
+struct cqueue *next;
+}*front=NULL,*rear=NULL,*temp;
 
 void enq(int);
 void dequ(void);
@@ -9,7 +12,7 @@ void display(void);
 
 int main()
 {
-    int ch, val;
+       int ch, val;
     while(1){
     printf("\n------------------------MENU-----------------------");
     printf("\n1. Enqueue \n2. Dequeue \n3. Display \n4. Exit");
@@ -35,41 +38,50 @@ int main()
 }
 
 void enq(int val){
-if((front==0 && rear==size-1)){
-    printf("\nQueue is full");
-}
-else if(rear==-1){
-    rear++;
-    front++;
+struct cqueue *newNode = (struct cqueue*)malloc(sizeof(struct cqueue));
+newNode->data=val;
+newNode->next=NULL;
+if(rear==NULL){
+    front=rear=newNode;
 }
 else{
-    rear++;
+    rear->next=newNode;
+    rear=newNode;
 }
-queue[rear]=val;
+rear->next=front;
 }
 
 void dequ(){
-if(front==-1){
-    printf("\nQueue is empty");
-}
-else if(front==rear){
-    printf("\nDeleted element is %d",queue[front]);
-    front=rear=-1;
+temp=front;
+if(front==NULL){
+    printf("\nqueue is empty !!!");
 }
 else{
-    printf("\ndeleted element is %d", queue[front]);
-    front++;
+    if(front==rear){
+        printf("\n%d",front->data);
+        front=rear=NULL;
+    }
+    else{
+        printf("\n%d",front->data);
+        front=front->next;
+        rear->next=front;
+    }
+    temp->next=NULL;
+    free(temp);
 }
 }
 
 void display(){
-    int i;
-if(front==-1){
+temp=front;
+if(front==NULL && rear==NULL){
     printf("\nQueue is empty !!!");
+    exit(0);
 }
 else{
-    for(i=front; i<=rear; i++){
-        printf("%d-->",queue[i]);
+    while(temp->next!=front){
+        printf("%d->",temp->data);
+        temp=temp->next;
     }
 }
+        printf("%d",rear->data);
 }
